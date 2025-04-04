@@ -1,7 +1,4 @@
-package org.bancoDigital.service;
-
-import org.bancoDigital.model.Cliente;
-import org.bancoDigital.model.Conta;
+package org.bancoDigital.model;
 
 public class ContaCorrente extends Conta{
     private double emprestimos, pagaEmprestimos = 0;

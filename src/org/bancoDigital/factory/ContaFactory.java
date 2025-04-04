@@ -2,8 +2,8 @@ package org.bancoDigital.factory;
 
 import org.bancoDigital.model.Cliente;
 import org.bancoDigital.model.Conta;
-import org.bancoDigital.service.ContaCorrente;
-import org.bancoDigital.service.ContaPoupanca;
+import org.bancoDigital.model.ContaCorrente;
+import org.bancoDigital.model.ContaPoupanca;
 
 public class ContaFactory {
     public static Conta criarConta(String tipo, Cliente cliente){

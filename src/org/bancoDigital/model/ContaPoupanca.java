@@ -1,7 +1,4 @@
-package org.bancoDigital.service;
-
-import org.bancoDigital.model.Cliente;
-import org.bancoDigital.model.Conta;
+package org.bancoDigital.model;
 
 public class ContaPoupanca extends Conta{
     private static final double TAXA_RENDIMENTO = 0.04;

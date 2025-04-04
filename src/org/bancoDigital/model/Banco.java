@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.bancoDigital.factory.ContaFactory;
 
 public class Banco {
-    private Map<Integer, Conta> contasPorID;
+    private final Map<Integer, Conta> contasPorID;
     
     public Banco() {
         this.contasPorID = new HashMap<>();
