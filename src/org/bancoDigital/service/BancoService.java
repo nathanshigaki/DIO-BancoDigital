@@ -1,7 +1,5 @@
 package org.bancoDigital.service;
 
-import java.util.Optional;
-
 import org.bancoDigital.model.Banco;
 import org.bancoDigital.model.Conta;
 
@@ -16,9 +14,9 @@ public class BancoService {
         if (valor <= 0) throw new IllegalArgumentException("Valor deve ser positivo");
         if (idOrigem == idDestino) throw new IllegalArgumentException("Transferência para a mesma conta não permitida");
 
-        Conta origem = Optional.ofNullable(contasPorID.get(idOrigem))
+        Conta origem = banco.buscarContaPorID(idOrigem)
                                .orElseThrow(() -> new IllegalArgumentException("Conta origem não encontrada: "+ idOrigem));
-        Conta destino = Optional.ofNullable(contasPorID.get(idDestino))
+        Conta destino = banco.buscarContaPorID(idDestino)
                                 .orElseThrow(() -> new IllegalArgumentException("Conta destino não encontrada: "+ idDestino));
 
         if (origem.getSaldo() < valor) throw new IllegalArgumentException("Saldo insuficiente na conta de origem.");
