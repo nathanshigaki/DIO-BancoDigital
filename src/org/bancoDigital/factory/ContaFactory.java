@@ -8,8 +8,8 @@ import org.bancoDigital.model.ContaPoupanca;
 public class ContaFactory {
     public static Conta criarConta(String tipo, Cliente cliente){
         return switch (tipo.toUpperCase()) {
-            case "C" -> new ContaCorrente(cliente, tipo);
-            case "P" -> new ContaPoupanca(cliente, tipo);
+            case "CORRENTE" -> new ContaCorrente(cliente, tipo);
+            case "POUPANÇA" -> new ContaPoupanca(cliente, tipo);
             default -> throw new IllegalArgumentException("Tipo de conta inválida: "+ tipo);
         };
     }

@@ -1,5 +1,7 @@
 package org.bancoDigital.model;
 
+import org.bancoDigital.util.CPFUtils;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -23,12 +25,10 @@ public class Cliente {
     }
 
     public String getCpf() {
-        return cpf;
+        return CPFUtils.formatarCPF(cpf);
     }
 
     public void setCpf(String cpf) {
-        cpf = cpf.replaceAll("[^0-9]", "");
-        cpf = cpf.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
         this.cpf = cpf;
     }
 

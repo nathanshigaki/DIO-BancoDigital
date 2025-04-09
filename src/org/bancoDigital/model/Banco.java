@@ -8,19 +8,35 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bancoDigital.factory.ContaFactory;
-
 public class Banco {
     private final Map<Integer, Conta> contasPorID;
+    private final List<Cliente> listaClientes;
     
     public Banco() {
         this.contasPorID = new HashMap<>();
+        this.listaClientes = new ArrayList<>();
     }
 
-    public Conta criarConta(String tipo, Cliente cliente){
-        Conta novaConta = ContaFactory.criarConta(tipo, cliente);
-        contasPorID.put(novaConta.getidConta(), novaConta);
-        return novaConta;
+    public void adicionarCliente(Cliente novoCliente){
+        listaClientes.add(novoCliente);
+    }
+
+    public List<Cliente> listarClientes(){
+        List<Cliente> clientesOrdenados = new ArrayList<>(listaClientes);
+        clientesOrdenados.sort(Comparator.comparing(Cliente::getNome));
+        return clientesOrdenados;
+    }
+
+    public Optional<Cliente> buscarClienteCPf(String cpf){
+        return listaClientes.stream().filter(c -> c.getCpf().equalsIgnoreCase(cpf)).findFirst();
+    }
+
+    public Optional<Cliente> buscarClienteNome(String nome){
+        return listaClientes.stream().filter(c -> c.getNome().equalsIgnoreCase(nome)).findFirst();
+    }
+
+    public void adicionarConta(Conta conta){
+        this.contasPorID.put(conta.getidConta(), conta);
     }
 
     public List<Conta> listarContas(){
@@ -43,19 +59,5 @@ public class Banco {
         return contasPorID.values().stream()
                 .filter(c -> c.getTipoConta().equalsIgnoreCase(tipo))
                 .collect(Collectors.toList());
-    }
-
-    public void transferir(int idOrigem, int idDestino, double valor){
-        if (valor <= 0) throw new IllegalArgumentException("Valor deve ser positivo");
-        if (idOrigem == idDestino) throw new IllegalArgumentException("Transferência para a mesma conta não permitida");
-
-        Conta origem = Optional.ofNullable(contasPorID.get(idOrigem))
-                               .orElseThrow(() -> new IllegalArgumentException("Conta origem não encontrada: "+ idOrigem));
-        Conta destivo = Optional.ofNullable(contasPorID.get(idDestino))
-                                .orElseThrow(() -> new IllegalArgumentException("Conta destino não encontrada: "+ idDestino));
-
-        if (origem.getSaldo() < valor) throw new IllegalArgumentException("Saldo insuficiente na conta de origem.");
-        origem.sacar(valor);
-        destivo.depositar(valor);
     }
 }
