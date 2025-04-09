@@ -1,17 +1,17 @@
 package org.bancoDigital.model;
 
 public abstract class Conta {
+    private static int ID = 1;
     protected int idConta;
+    protected Cliente cliente;
     protected String tipoConta;
     protected double saldo;
-    protected Cliente cliente;
-    private static int ID = 1;
 
     public Conta(Cliente cliente, String tipoConta) {
         this.idConta = ID++;
+        this.cliente = cliente;
         this.tipoConta = tipoConta;
         this.saldo = 0.0;
-        this.cliente = cliente;
     }
 
     public int getidConta() {
@@ -56,5 +56,15 @@ public abstract class Conta {
         if (this.saldo >= valor){
             this.saldo -= valor;
         }
+    }
+
+    @Override
+    public String toString(){
+        return "Conta{" +
+               "ID ='" + idConta + '\'' +
+               ", cliente ='" + cliente + '\'' +
+               ", tipo da conta ='" + tipoConta + '\'' +
+               ", saldo ='" + saldo + '\'' +
+               '}';
     }
 }   

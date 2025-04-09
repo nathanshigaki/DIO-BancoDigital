@@ -40,4 +40,13 @@ public class Cliente {
         LocalDate date = LocalDate.parse(dataNascimento, ENTRADA_FORMATTER);
         this.dataNascimento = date.format(SAIDA_FORMATTER);
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+               "nome ='" + nome + '\'' +
+               ", cpf ='" + cpf + '\'' +
+               ", data de nascimento ='" + dataNascimento + '\'' +
+               '}';
+    }
 }

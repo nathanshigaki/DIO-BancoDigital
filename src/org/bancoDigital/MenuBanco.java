@@ -46,7 +46,7 @@ public class MenuBanco {
             case 1 -> clienteService.cadastrarCliente();
             case 2 -> bancoService.abrirConta("CORRENTE");
             case 3 -> bancoService.abrirConta("POUPANÇA");
-            case 6 -> banco.listarClientes();
+            case 6 -> System.out.println(banco.listarClientes());
             case 7 -> filtroContas(banco);
             default -> System.out.println("Opção inválida, tente novamente.");
         }
@@ -62,9 +62,9 @@ public class MenuBanco {
                 Escolha uma opção
                 """);
         switch (opcao) {
-            case 1 -> banco.listarContas();
-            case 2 -> banco.buscarContasPorTipo("CORRENTE");
-            case 3 -> banco.buscarContasPorTipo("POUPANÇA");
+            case 1 -> System.out.println(banco.listarContas());
+            case 2 -> System.out.println(banco.buscarContasPorTipo("CORRENTE"));
+            case 3 -> System.out.println(banco.buscarContasPorTipo("POUPANÇA"));
             default -> System.out.println("Opção inválida, tente novamente.");
         }
     }
