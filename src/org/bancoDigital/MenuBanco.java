@@ -1,6 +1,7 @@
 package org.bancoDigital;
 
 import org.bancoDigital.model.Banco;
+import org.bancoDigital.model.Conta;
 import org.bancoDigital.service.BancoService;
 import org.bancoDigital.service.ClienteService;
 import org.bancoDigital.util.InputScanner;
@@ -21,7 +22,7 @@ public class MenuBanco {
 
         do {
             opcao = exibirMenu();
-            fazer(opcao, clienteService, bancoService, banco);
+            executarMenu(opcao, clienteService, bancoService, banco);
         } while (opcao !=0);
     }
 
@@ -31,25 +32,71 @@ public class MenuBanco {
                 [ 1 ] Cadastrar cliente.
                 [ 2 ] Criar conta corrente.
                 [ 3 ] Criar conta poupança.
-                [ 4 ] Realizar transferência.
-                [ 5 ] Consultar saldo.
-                [ 6 ] Listar clientes.
-                [ 7 ] Listar contas.
+                [ 4 ] Listar clientes.
+                [ 5 ] Listar contas.
+                [ 6 ] Gerenciar conta.
                 [ 0 ] Sair.
                 
                 Escolha uma opção: 
                 """);
     }
 
-    public void fazer(int opcao,  ClienteService clienteService, BancoService bancoService, Banco banco){
+    public void executarMenu(int opcao,  ClienteService clienteService, BancoService bancoService, Banco banco){
         switch (opcao) {
             case 1 -> clienteService.cadastrarCliente();
             case 2 -> bancoService.abrirConta("CORRENTE");
             case 3 -> bancoService.abrirConta("POUPANÇA");
-            case 6 -> System.out.println(banco.listarClientes());
-            case 7 -> filtroContas(banco);
+            case 4 -> System.out.println(banco.listarClientes());
+            case 5 -> filtroContas(banco);
+            case 6 -> {
+                opcao = gerenciarContas();
+                executarGerenciarContas(opcao, banco, bancoService);
+            }
+            case 0 -> System.out.println("Saiu do sistema bancário.");
             default -> System.out.println("Opção inválida, tente novamente.");
         }
+    }
+
+    public void executarGerenciarContas(int opcao, Banco banco, BancoService bancoService){
+        boolean contaDefinida = false;
+        String cpf = null;
+        String tipo = null;
+        do {
+            if (!contaDefinida){
+                cpf = InputScanner.lerString("CPF:");
+                tipo = InputScanner.lerString("Tipo da conta(CORRENTE OU POUPANÇA): ");
+                contaDefinida = true;
+            }
+            Conta origem = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+            switch (opcao) {
+                case 1 -> origem.depositar(InputScanner.lerDouble("Valor: "));
+                case 2 -> origem.sacar(InputScanner.lerDouble("Valor: "));
+                case 3 -> origem.getSaldo();
+                case 4 -> {
+                    cpf = InputScanner.lerString("CPF:");
+                    tipo = InputScanner.lerString("Tipo da conta(CORRENTE OU POUPANÇA): ");
+                    Conta destino = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+                    bancoService.transferir(origem, destino, InputScanner.lerDouble("Valor: "));
+                }
+                case 5 -> contaDefinida = false;
+                case 0 -> System.out.println("Saindo do gerenciador de conta.");
+                default -> System.out.println("Opção inválida, tente novamente.");
+            }
+        } while (opcao !=0);
+    }
+
+    public int gerenciarContas(){
+        return InputScanner.lerInt("""
+
+                [ 1 ] Depositar.
+                [ 2 ] Sacar.
+                [ 3 ] Consultar saldo.
+                [ 4 ] Realizar transferência.
+                [ 5 ] Trocar conta.
+                [ 0 ] Sair.
+                
+                Escolha uma opção: 
+                """);
     }
 
     public void filtroContas(Banco banco){
@@ -63,8 +110,8 @@ public class MenuBanco {
                 """);
         switch (opcao) {
             case 1 -> System.out.println(banco.listarContas());
-            case 2 -> System.out.println(banco.buscarContasPorTipo("CORRENTE"));
-            case 3 -> System.out.println(banco.buscarContasPorTipo("POUPANÇA"));
+            case 2 -> System.out.println(banco.listarContasPorTipo("CORRENTE"));
+            case 3 -> System.out.println(banco.listarContasPorTipo("POUPANÇA"));
             default -> System.out.println("Opção inválida, tente novamente.");
         }
     }

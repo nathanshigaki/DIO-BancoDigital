@@ -55,6 +55,9 @@ public abstract class Conta {
     public void sacar(double valor){
         if (this.saldo >= valor){
             this.saldo -= valor;
+            System.out.println("Saque realizado com sucesso. Novo saldo: " + this.saldo);
+        } else {
+            System.out.println("Saldo insuficiente. Saldo atual: " + this.saldo);
         }
     }
 

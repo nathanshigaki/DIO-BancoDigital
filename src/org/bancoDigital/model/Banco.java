@@ -26,7 +26,6 @@ public class Banco {
     public List<Cliente> listarClientes(){
         List<Cliente> clientesOrdenados = new ArrayList<>(listaClientes);
         clientesOrdenados.sort(Comparator.comparing(Cliente::getNome));
-        System.out.println("lista");
         return clientesOrdenados;
     }
 
@@ -52,15 +51,22 @@ public class Banco {
         return Optional.ofNullable(contasPorID.get(id));
     }
 
-    public List<Conta> buscarContasPorCPF(String cpf){
+    public List<Conta> listarContasPorCPF(String cpf){
         return contasPorID.values().stream()
-        .filter(c -> c.getCliente().getCpf().equalsIgnoreCase(cpf))
-        .collect(Collectors.toList());
+                          .filter(c -> c.getCliente().getCpf().equalsIgnoreCase(cpf))
+                          .collect(Collectors.toList());
     }
 
-    public List<Conta> buscarContasPorTipo(String tipo){
+    public List<Conta> listarContasPorTipo(String tipo){
         return contasPorID.values().stream()
-                .filter(c -> c.getTipoConta().equalsIgnoreCase(tipo))
-                .collect(Collectors.toList());
+                          .filter(c -> c.getTipoConta().equalsIgnoreCase(tipo))
+                          .collect(Collectors.toList());
+    }
+
+    public Optional<Conta> definirConta(String cpf, String tipo){
+        return contasPorID.values().stream()
+                          .filter(c -> c.getCliente().getCpf().equalsIgnoreCase(cpf))
+                          .filter(c -> c.getTipoConta().equalsIgnoreCase(tipo))
+                          .findFirst();
     }
 }
