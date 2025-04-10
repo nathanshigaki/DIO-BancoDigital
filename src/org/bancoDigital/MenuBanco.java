@@ -2,6 +2,7 @@ package org.bancoDigital;
 
 import org.bancoDigital.model.Banco;
 import org.bancoDigital.model.Conta;
+import org.bancoDigital.model.ContaCorrente;
 import org.bancoDigital.service.BancoService;
 import org.bancoDigital.service.ClienteService;
 import org.bancoDigital.util.CPFUtils;
@@ -53,8 +54,10 @@ public class MenuBanco {
             case 5 -> System.out.println(banco.listarClientes());
             case 6 -> filtroContas(banco);
             case 7 -> {
-                opcao = gerenciarContas();
-                executarGerenciarContas(opcao, banco, bancoService);
+                while (opcao != 0){
+                    opcao = gerenciarContas();
+                    executarGerenciarContas(opcao, banco, bancoService);
+                }
             }
             case 0 -> System.out.println("Saiu do sistema bancário.");
             default -> System.out.println("Opção inválida, tente novamente.");
@@ -83,8 +86,14 @@ public class MenuBanco {
                     bancoService.transferir(origem, destino, InputScanner.lerDouble("Valor: "));
                 }
                 case 5 -> contaDefinida = false;
-                case 6 -> System.out.println(banco.removerContaEspecifica(cpf, tipo) ? "Conta removida com sucesso" : "Conta não encontrada");
-                case 7 -> System.out.println(banco.removerTodasAsContasCliente(cpf) ? "Conta removida com sucesso" : "Conta não encontrada");
+                case 6 -> {
+                    if (tipo.equalsIgnoreCase("CORRENTE")){
+                        ContaCorrente contaCorrente = origem;
+                    }
+                    System.out.println("A conta tem que ser do tipo corrente.");
+                }
+                case 8 -> System.out.println(banco.removerContaEspecifica(cpf, tipo) ? "Conta removida com sucesso" : "Conta não encontrada");
+                case 9 -> System.out.println(banco.removerTodasAsContasCliente(cpf) ? "Conta removida com sucesso" : "Conta não encontrada");
                 case 0 -> System.out.println("Saindo do gerenciador de conta.");
                 default -> System.out.println("Opção inválida, tente novamente.");
             }
@@ -99,8 +108,10 @@ public class MenuBanco {
                 [ 3 ] Consultar saldo.
                 [ 4 ] Realizar transferência.
                 [ 5 ] Trocar conta.
-                [ 6 ] Remover conta especifica.
-                [ 7 ] Remover todas as contas do cliente.
+                [ 6 ] Ações para conta corrente.
+                [ 7 ] Ações para conta poupança
+                [ 8 ] Remover conta especifica.
+                [ 9 ] Remover todas as contas do cliente.
                 [ 0 ] Sair.
                 
                 Escolha uma opção: 

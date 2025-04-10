@@ -21,7 +21,7 @@ public class ContaCorrente extends Conta{
     }
 
     public void valorEmprestimo(){
-        pagaEmprestimos = emprestimos * 1.2;
+        pagaEmprestimos = emprestimos * 1.1;
         System.out.println("Valor do emprestimos a ser pago e "+ pagaEmprestimos);
     }
 
