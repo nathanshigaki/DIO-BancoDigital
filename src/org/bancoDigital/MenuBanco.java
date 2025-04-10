@@ -30,11 +30,12 @@ public class MenuBanco {
         return InputScanner.lerInt("""
 
                 [ 1 ] Cadastrar cliente.
-                [ 2 ] Criar conta corrente.
-                [ 3 ] Criar conta poupança.
-                [ 4 ] Listar clientes.
-                [ 5 ] Listar contas.
-                [ 6 ] Gerenciar conta.
+                [ 2 ] Remover cliente.
+                [ 3 ] Criar conta corrente.
+                [ 4 ] Criar conta poupança.
+                [ 5 ] Listar clientes.
+                [ 6 ] Listar contas.
+                [ 7 ] Gerenciar conta.
                 [ 0 ] Sair.
                 
                 Escolha uma opção: 
@@ -44,11 +45,12 @@ public class MenuBanco {
     public void executarMenu(int opcao,  ClienteService clienteService, BancoService bancoService, Banco banco){
         switch (opcao) {
             case 1 -> clienteService.cadastrarCliente();
-            case 2 -> bancoService.abrirConta("CORRENTE");
-            case 3 -> bancoService.abrirConta("POUPANÇA");
-            case 4 -> System.out.println(banco.listarClientes());
-            case 5 -> filtroContas(banco);
-            case 6 -> {
+            case 2 -> System.out.println(banco.removerCliente(InputScanner.lerString("CPF:")) ? "Cliente removido com sucesso" : "Cliente não encontrado");
+            case 3 -> bancoService.abrirConta("CORRENTE");
+            case 4 -> bancoService.abrirConta("POUPANÇA");
+            case 5 -> System.out.println(banco.listarClientes());
+            case 6 -> filtroContas(banco);
+            case 7 -> {
                 opcao = gerenciarContas();
                 executarGerenciarContas(opcao, banco, bancoService);
             }
@@ -79,6 +81,8 @@ public class MenuBanco {
                     bancoService.transferir(origem, destino, InputScanner.lerDouble("Valor: "));
                 }
                 case 5 -> contaDefinida = false;
+                case 6 -> System.out.println(banco.removerContaEspecifica(cpf, tipo) ? "Conta removida com sucesso" : "Conta não encontrada");
+                case 7 -> System.out.println(banco.removerTodasAsContasCliente(cpf) ? "Conta removida com sucesso" : "Conta não encontrada");
                 case 0 -> System.out.println("Saindo do gerenciador de conta.");
                 default -> System.out.println("Opção inválida, tente novamente.");
             }
@@ -93,6 +97,8 @@ public class MenuBanco {
                 [ 3 ] Consultar saldo.
                 [ 4 ] Realizar transferência.
                 [ 5 ] Trocar conta.
+                [ 6 ] Remover conta especifica.
+                [ 7 ] Remover todas as contas do cliente.
                 [ 0 ] Sair.
                 
                 Escolha uma opção: 

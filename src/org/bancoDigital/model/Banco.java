@@ -23,6 +23,11 @@ public class Banco {
         System.out.println("Adiciona");
     }
 
+    public boolean removerCliente(String cpf){
+        removerTodasAsContasCliente(cpf);
+        return listaClientes.removeIf(cliente -> cliente.getCpf().equalsIgnoreCase(cpf));
+    }
+
     public List<Cliente> listarClientes(){
         List<Cliente> clientesOrdenados = new ArrayList<>(listaClientes);
         clientesOrdenados.sort(Comparator.comparing(Cliente::getNome));
@@ -39,6 +44,15 @@ public class Banco {
 
     public void adicionarConta(Conta conta){
         this.contasPorID.put(conta.getidConta(), conta);
+    }
+
+    public boolean removerTodasAsContasCliente(String cpf){
+        return contasPorID.values().removeIf(c -> c.getCliente().getCpf().equalsIgnoreCase(cpf));
+    }
+
+    public boolean removerContaEspecifica(String cpf, String tipo){
+        Conta conta = definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+        return contasPorID.values().removeIf(c -> c.equals(conta));
     }
 
     public List<Conta> listarContas(){
