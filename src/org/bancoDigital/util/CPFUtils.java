@@ -1,6 +1,20 @@
 package org.bancoDigital.util;
 
 public class CPFUtils {
+
+    public static String recebeCPF(String cpf){
+        while (!tamanhpCPF(cpf)) {
+            System.out.println("Cpf inválido.");
+            cpf = InputScanner.lerString("CPF: ");            
+        }
+
+        return cpf;
+    }
+
+    public static boolean tamanhpCPF(String cpf){
+        String numeros = cpf.replaceAll("[^0-9]", "");
+        return numeros.length() == 11;
+    }
     public static String formatarCPF(String cpf) {
         //if (!validarCPF(cpf)) {
           //  throw new IllegalArgumentException("CPF inválido");

@@ -4,6 +4,7 @@ import org.bancoDigital.model.Banco;
 import org.bancoDigital.model.Conta;
 import org.bancoDigital.service.BancoService;
 import org.bancoDigital.service.ClienteService;
+import org.bancoDigital.util.CPFUtils;
 import org.bancoDigital.util.InputScanner;
 
 public class MenuBanco {
@@ -11,6 +12,7 @@ public class MenuBanco {
     public static void main(String[] args) {
         MenuBanco menu = new MenuBanco();
         menu.iniciar();    
+        InputScanner.fecharScanner();
     }
 
     public void iniciar(){
@@ -45,7 +47,7 @@ public class MenuBanco {
     public void executarMenu(int opcao,  ClienteService clienteService, BancoService bancoService, Banco banco){
         switch (opcao) {
             case 1 -> clienteService.cadastrarCliente();
-            case 2 -> System.out.println(banco.removerCliente(InputScanner.lerString("CPF:")) ? "Cliente removido com sucesso" : "Cliente não encontrado");
+            case 2 -> System.out.println(banco.removerCliente(CPFUtils.recebeCPF(InputScanner.lerString("CPF:"))) ? "Cliente removido com sucesso" : "Cliente não encontrado");
             case 3 -> bancoService.abrirConta("CORRENTE");
             case 4 -> bancoService.abrirConta("POUPANÇA");
             case 5 -> System.out.println(banco.listarClientes());
@@ -65,8 +67,8 @@ public class MenuBanco {
         String tipo = null;
         do {
             if (!contaDefinida){
-                cpf = InputScanner.lerString("CPF:");
-                tipo = InputScanner.lerString("Tipo da conta(CORRENTE OU POUPANÇA): ");
+                cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF:"));
+                tipo = InputScanner.lerTipoConta("Tipo da conta(CORRENTE OU POUPANÇA): ");
                 contaDefinida = true;
             }
             Conta origem = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
@@ -75,8 +77,8 @@ public class MenuBanco {
                 case 2 -> origem.sacar(InputScanner.lerDouble("Valor: "));
                 case 3 -> origem.getSaldo();
                 case 4 -> {
-                    cpf = InputScanner.lerString("CPF:");
-                    tipo = InputScanner.lerString("Tipo da conta(CORRENTE OU POUPANÇA): ");
+                    cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF:"));
+                    tipo = InputScanner.lerTipoConta("Tipo da conta(CORRENTE OU POUPANÇA): ");
                     Conta destino = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
                     bancoService.transferir(origem, destino, InputScanner.lerDouble("Valor: "));
                 }

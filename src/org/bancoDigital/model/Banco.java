@@ -20,7 +20,7 @@ public class Banco {
     public void adicionarCliente(Cliente novoCliente){
         if (novoCliente == null) throw new IllegalArgumentException("Cliente nulo");
         listaClientes.add(novoCliente);
-        System.out.println("Adiciona");
+        System.out.println("Adicionado com sucesso.");
     }
 
     public boolean removerCliente(String cpf){

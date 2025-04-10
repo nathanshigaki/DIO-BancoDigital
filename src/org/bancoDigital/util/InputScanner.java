@@ -10,6 +10,18 @@ public class InputScanner {
         return scanner.nextLine();
     }
 
+    public static String lerTipoConta(String mensagem){
+        while (true) {
+            System.out.println(mensagem);
+            String tipo = scanner.next();
+            switch (tipo.toUpperCase()) {
+                case "CORRENTE" : return tipo;
+                case "POUPANÇA" : return tipo;
+                default : System.out.println("Tipo de conta inválida.");
+            }
+        }
+    }
+
     public static int lerInt(String mensagem) {
         while (true) {
             try {

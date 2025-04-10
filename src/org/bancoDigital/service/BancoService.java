@@ -4,6 +4,7 @@ import org.bancoDigital.factory.ContaFactory;
 import org.bancoDigital.model.Banco;
 import org.bancoDigital.model.Cliente;
 import org.bancoDigital.model.Conta;
+import org.bancoDigital.util.CPFUtils;
 import org.bancoDigital.util.InputScanner;
 import org.bancoDigital.MenuBanco;
 
@@ -26,7 +27,7 @@ public class BancoService {
                                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
                 }
                 case 2 -> {
-                    String cpf = InputScanner.lerString("CPF: ");
+                    String cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF: "));
                     cliente = banco.buscarClienteCPf(cpf)
                                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));;
                 }

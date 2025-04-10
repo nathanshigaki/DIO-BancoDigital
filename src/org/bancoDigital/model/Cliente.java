@@ -45,7 +45,7 @@ public class Cliente {
     public String toString() {
         return "Cliente{" +
                "nome ='" + nome + '\'' +
-               ", cpf ='" + cpf + '\'' +
+               ", cpf ='" + getCpf() + '\'' +
                ", data de nascimento ='" + dataNascimento + '\'' +
                '}';
     }
