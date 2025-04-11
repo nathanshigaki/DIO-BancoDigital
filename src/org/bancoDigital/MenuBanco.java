@@ -3,6 +3,7 @@ package org.bancoDigital;
 import org.bancoDigital.model.Banco;
 import org.bancoDigital.model.Conta;
 import org.bancoDigital.model.ContaCorrente;
+import org.bancoDigital.model.ContaPoupanca;
 import org.bancoDigital.service.BancoService;
 import org.bancoDigital.service.ClienteService;
 import org.bancoDigital.util.CPFUtils;
@@ -54,20 +55,22 @@ public class MenuBanco {
             case 5 -> System.out.println(banco.listarClientes());
             case 6 -> filtroContas(banco);
             case 7 -> {
-                while (opcao != 0){
-                    opcao = gerenciarContas();
-                    executarGerenciarContas(opcao, banco, bancoService);
-                }
+                int opcao1;
+                do{
+                    opcao1 = gerenciarContas();
+                    executarGerenciarContas(opcao1, banco, bancoService);
+                } while (opcao1 != 0);
             }
             case 0 -> System.out.println("Saiu do sistema bancário.");
             default -> System.out.println("Opção inválida, tente novamente.");
         }
     }
 
-    public void executarGerenciarContas(int opcao, Banco banco, BancoService bancoService){
+    public void executarGerenciarContas(int opcao1, Banco banco, BancoService bancoService){
         boolean contaDefinida = false;
         String cpf = null;
         String tipo = null;
+        int opcao2 = opcao1;
         do {
             if (!contaDefinida){
                 cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF:"));
@@ -75,7 +78,7 @@ public class MenuBanco {
                 contaDefinida = true;
             }
             Conta origem = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
-            switch (opcao) {
+            switch (opcao2) {
                 case 1 -> origem.depositar(InputScanner.lerDouble("Valor: "));
                 case 2 -> origem.sacar(InputScanner.lerDouble("Valor: "));
                 case 3 -> origem.getSaldo();
@@ -87,17 +90,35 @@ public class MenuBanco {
                 }
                 case 5 -> contaDefinida = false;
                 case 6 -> {
-                    if (tipo.equalsIgnoreCase("CORRENTE")){
-                        ContaCorrente contaCorrente = origem;
+                    int opcao3 = gerenciarContaCorrente();
+                    if (origem instanceof ContaCorrente){
+                        ContaCorrente cc = (ContaCorrente) origem;
+                        do {
+                            switch (opcao3) {
+                                case 1 -> cc.pedirEmprestimo();
+                                case 2 -> cc.pagarEmprestimos();
+                                case 3 -> cc.valorEmprestimo();
+                                case 4 -> System.out.println("Voltando para o gerenciador de contas.");
+                                default -> System.out.println("Opção inválida");
+                            }
+                        } while (opcao3 != 0);
+                    } else {
+                        System.out.println("Tipo de conta inválido: somente 'CORRENTE' é permitido.");
                     }
-                    System.out.println("A conta tem que ser do tipo corrente.");
+                }
+                case 7 -> {
+                    if (origem instanceof ContaPoupanca){
+                        ContaPoupanca cp = (ContaPoupanca) origem;
+                        cp.simulacaoPoupanca();
+                    }
                 }
                 case 8 -> System.out.println(banco.removerContaEspecifica(cpf, tipo) ? "Conta removida com sucesso" : "Conta não encontrada");
                 case 9 -> System.out.println(banco.removerTodasAsContasCliente(cpf) ? "Conta removida com sucesso" : "Conta não encontrada");
                 case 0 -> System.out.println("Saindo do gerenciador de conta.");
                 default -> System.out.println("Opção inválida, tente novamente.");
             }
-        } while (opcao !=0);
+            opcao2 = gerenciarContas();
+        } while (opcao2 !=0);
     }
 
     public int gerenciarContas(){
@@ -108,13 +129,25 @@ public class MenuBanco {
                 [ 3 ] Consultar saldo.
                 [ 4 ] Realizar transferência.
                 [ 5 ] Trocar conta.
-                [ 6 ] Ações para conta corrente.
-                [ 7 ] Ações para conta poupança
+                [ 6 ] Ações da conta corrente.
+                [ 7 ] Ações da conta poupança
                 [ 8 ] Remover conta especifica.
                 [ 9 ] Remover todas as contas do cliente.
-                [ 0 ] Sair.
+                [ 0 ] Voltar.
                 
                 Escolha uma opção: 
+                """);
+    }
+
+    public int gerenciarContaCorrente(){
+        return InputScanner.lerInt("""
+                
+                [ 1 ] Pedir empréstimo.
+                [ 2 ] Pagar emprestimo.
+                [ 3 ] Verificar valor do emprestimo.
+                [ 0 ] Voltar.
+
+                Escolha uma opção:
                 """);
     }
 
@@ -133,15 +166,5 @@ public class MenuBanco {
             case 3 -> System.out.println(banco.listarContasPorTipo("POUPANÇA"));
             default -> System.out.println("Opção inválida, tente novamente.");
         }
-    }
-
-    public static int nomeOuCpf(){
-        return InputScanner.lerInt("""
-
-                [ 1 ] Procurar por nome.
-                [ 2 ] Procurar por CPF.
-
-                Escolha uma opção: 
-                """);
     }
 }

@@ -6,7 +6,7 @@ import org.bancoDigital.model.ContaCorrente;
 import org.bancoDigital.model.ContaPoupanca;
 
 public class ContaFactory {
-    public static Conta criarConta(String tipo, Cliente cliente){
+    public static Conta criarConta(Cliente cliente, String tipo){
         return switch (tipo.toUpperCase()) {
             case "CORRENTE" -> new ContaCorrente(cliente, tipo);
             case "POUPANÇA" -> new ContaPoupanca(cliente, tipo);

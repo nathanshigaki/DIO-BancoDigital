@@ -6,7 +6,8 @@ import org.bancoDigital.model.Cliente;
 import org.bancoDigital.model.Conta;
 import org.bancoDigital.util.CPFUtils;
 import org.bancoDigital.util.InputScanner;
-import org.bancoDigital.MenuBanco;
+
+import java.util.Optional;
 
 public class BancoService {
     private Banco banco;
@@ -16,28 +17,21 @@ public class BancoService {
     }
 
     public Conta abrirConta(String tipo){
-        Cliente cliente = null;
-
-        while (cliente == null){
-            int opcao = MenuBanco.nomeOuCpf();
-            switch(opcao){
-                case 1 -> {
-                    String nome = InputScanner.lerString("Nome: ");
-                    cliente = banco.buscarClienteNome(nome)
-                                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-                }
-                case 2 -> {
-                    String cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF: "));
-                    cliente = banco.buscarClienteCPf(cpf)
-                                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));;
-                }
-                default -> System.out.println("Tente novamente");
+        try {
+            String cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF: "));
+            Optional<Cliente> clienteOptional = banco.buscarClienteCPf(cpf);
+            if (clienteOptional.isEmpty()){
+                System.out.println("Cliente não encontrado. Verifique o CPF ou cadastre o cliente primeiro.");
+                return null;
             }
+            Cliente cliente = clienteOptional.get();
+            Conta novaConta = ContaFactory.criarConta(cliente, tipo);
+            banco.adicionarConta(novaConta);
+            return novaConta;
+        } catch (IllegalArgumentException e){
+            System.out.println("Erro ao criar conta: " + e.getMessage());
+            return null;
         }
-
-        Conta novaConta = ContaFactory.criarConta(tipo, cliente);
-        banco.adicionarConta(novaConta);
-        return novaConta;
     }
 
     public void transferir(Conta origem, Conta destino, double valor){

@@ -38,10 +38,6 @@ public class Banco {
         return listaClientes.stream().filter(c -> c.getCpf().equalsIgnoreCase(cpf)).findFirst();
     }
 
-    public Optional<Cliente> buscarClienteNome(String nome){
-        return listaClientes.stream().filter(c -> c.getNome().equalsIgnoreCase(nome)).findFirst();
-    }
-
     public void adicionarConta(Conta conta){
         this.contasPorID.put(conta.getidConta(), conta);
     }

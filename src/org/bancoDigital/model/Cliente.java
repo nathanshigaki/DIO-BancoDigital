@@ -25,7 +25,7 @@ public class Cliente {
     }
 
     public String getCpf() {
-        return CPFUtils.formatarCPF(cpf);
+        return cpf;
     }
 
     public void setCpf(String cpf) {
@@ -45,7 +45,7 @@ public class Cliente {
     public String toString() {
         return "Cliente{" +
                "nome ='" + nome + '\'' +
-               ", cpf ='" + getCpf() + '\'' +
+               ", cpf ='" + CPFUtils.formatarCPF(cpf) + '\'' +
                ", data de nascimento ='" + dataNascimento + '\'' +
                '}';
     }
