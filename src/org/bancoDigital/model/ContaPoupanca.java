@@ -21,7 +21,7 @@ public class ContaPoupanca extends Conta{
                 break;
             }else {
                 double ganho = this.saldo * TAXA_RENDIMENTO * dias;
-                System.out.println("renderia "+ganho);
+                System.out.println("Renderia R$"+ganho);
             }
         }
     }

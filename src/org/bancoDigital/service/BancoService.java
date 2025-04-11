@@ -40,5 +40,6 @@ public class BancoService {
         if (origem.getSaldo() < valor) throw new IllegalArgumentException("Saldo insuficiente na conta de origem.");
         origem.sacar(valor);
         destino.depositar(valor);
+        System.out.println("\nTransferencia concluida.");
     }
 }

@@ -1,14 +1,10 @@
 package org.bancoDigital.model;
 
 import org.bancoDigital.util.CPFUtils;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import org.bancoDigital.util.DateUtils;
 
 public class Cliente {
     private String nome, cpf, dataNascimento;
-    private static final DateTimeFormatter ENTRADA_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
-    private static final DateTimeFormatter SAIDA_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Cliente(String nome, String cpf, String dataNascimento) {
         this.setNome(nome);
@@ -37,8 +33,7 @@ public class Cliente {
     }
     
     public void setDataNascimento(String dataNascimento) {
-        LocalDate date = LocalDate.parse(dataNascimento, ENTRADA_FORMATTER);
-        this.dataNascimento = date.format(SAIDA_FORMATTER);
+        this.dataNascimento = dataNascimento;
     }
 
     @Override
@@ -46,7 +41,7 @@ public class Cliente {
         return "Cliente{" +
                "nome ='" + nome + '\'' +
                ", cpf ='" + CPFUtils.formatarCPF(cpf) + '\'' +
-               ", data de nascimento ='" + dataNascimento + '\'' +
+               ", data de nascimento ='" + DateUtils.formatarData(dataNascimento) + '\'' +
                '}';
     }
 }

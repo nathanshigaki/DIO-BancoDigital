@@ -16,9 +16,6 @@ public class CPFUtils {
         return numeros.length() == 11;
     }
     public static String formatarCPF(String cpf) {
-        //if (!validarCPF(cpf)) {
-          //  throw new IllegalArgumentException("CPF inválido");
-        //}
         return cpf.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
     }
     
@@ -29,7 +26,6 @@ public class CPFUtils {
             return false;
         }
         
-        // Cálculo dos dígitos verificadores
         try {
             int soma = 0;
             for (int i = 0; i < 9; i++) {

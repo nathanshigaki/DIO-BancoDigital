@@ -39,14 +39,14 @@ public class ContaCorrente extends Conta{
 
     public void valorEmprestimo(){
         pagaEmprestimos = emprestimos * 1.1;
-        System.out.println("Valor do emprestimos a ser pago e "+ pagaEmprestimos);
+        System.out.println("Valor do emprestimos a ser pago é R$"+ pagaEmprestimos);
     }
 
     public void pagarEmprestimos(){
         valorEmprestimo();
         if (this.saldo >= pagaEmprestimos){
             this.saldo -= pagaEmprestimos;
-            System.out.println("Pago o emprestimo");
+            System.out.println("Pagou o emprestimo");
             emprestimos = 0;
         } else {
             double falta = pagaEmprestimos - this.saldo;

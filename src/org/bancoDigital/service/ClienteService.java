@@ -13,7 +13,6 @@ public class ClienteService {
 
     public void cadastrarCliente(){
         Cliente novoCliente = ClienteFactory.criarCliente();
-        System.out.println(novoCliente.getNome());
         banco.adicionarCliente(novoCliente);
     }
 }

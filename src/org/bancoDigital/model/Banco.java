@@ -20,7 +20,7 @@ public class Banco {
     public void adicionarCliente(Cliente novoCliente){
         if (novoCliente == null) throw new IllegalArgumentException("Cliente nulo");
         listaClientes.add(novoCliente);
-        System.out.println("Adicionado com sucesso.");
+        System.out.println("Cliente adicionado com sucesso.");
     }
 
     public boolean removerCliente(String cpf){
@@ -40,6 +40,7 @@ public class Banco {
 
     public void adicionarConta(Conta conta){
         this.contasPorID.put(conta.getidConta(), conta);
+        System.out.println("Conta adicionado com sucesso.");
     }
 
     public boolean removerTodasAsContasCliente(String cpf){
