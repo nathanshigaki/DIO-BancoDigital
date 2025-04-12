@@ -1,8 +1,6 @@
-## Getting Started
+## Banco digital
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
+Fazer uma base de banco digital com algumas funções usando Java com padrões de projeto. Usar os aprendizados da faculdade e do curso DIO.
 
 The workspace contains two folders by default, where:
 
