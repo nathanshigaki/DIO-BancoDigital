@@ -58,18 +58,21 @@ public class DateUtils {
     }
 
     public static boolean verificarMaiorIdade(String data) {
-        String dataFormatada = formatarData(data);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        if (data == null || data.trim().isEmpty()) throw new IllegalArgumentException("Data não pode ser nula ou vazia");
+    
+    try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+        LocalDate dataNasc = LocalDate.parse(data, formatter);
+        LocalDate hoje = LocalDate.now();
         
-        try {
-            LocalDate dataNasc = LocalDate.parse(dataFormatada, formatter);
-            LocalDate hoje = LocalDate.now();
-            
-            Period periodo = Period.between(dataNasc, hoje);
-            return periodo.getYears() >= 18;
-            
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Data inválida: " + data);
+        if (dataNasc.isAfter(hoje)) {
+            throw new IllegalArgumentException("Data de nascimento não pode ser no futuro: " + data);
         }
+        
+        return Period.between(dataNasc, hoje).getYears() >= 18;
+        
+    } catch (DateTimeParseException e) {
+        throw new IllegalArgumentException("Data inválida.");
+    }
     }
 }

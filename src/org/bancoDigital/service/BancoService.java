@@ -10,10 +10,12 @@ import org.bancoDigital.util.InputScanner;
 import java.util.Optional;
 
 public class BancoService {
-    private Banco banco;
+    private final Banco banco;
+    private final ContaFactory contaFactory;
 
     public BancoService(Banco banco) {
         this.banco = banco;
+        this.contaFactory = new ContaFactory();
     }
 
     public Conta abrirConta(String tipo){
@@ -25,7 +27,7 @@ public class BancoService {
                 return null;
             }
             Cliente cliente = clienteOptional.get();
-            Conta novaConta = ContaFactory.criarConta(cliente, tipo);
+            Conta novaConta = contaFactory.criarConta(cliente, tipo);
             banco.adicionarConta(novaConta);
             return novaConta;
         } catch (IllegalArgumentException e){
