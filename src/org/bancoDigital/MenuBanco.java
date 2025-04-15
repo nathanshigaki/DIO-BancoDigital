@@ -54,75 +54,36 @@ public class MenuBanco {
             case 4 -> bancoService.abrirConta("POUPANÇA");
             case 5 -> System.out.println(banco.listarClientes());
             case 6 -> filtroContas(banco);
-            case 7 -> {
-                int opcao1;
-                do{
-                    opcao1 = gerenciarContas();
-                    executarGerenciarContas(opcao1, banco, bancoService);
-                } while (opcao1 != 0);
-            }
+            case 7 -> gerenciarContas(banco, bancoService);
             case 0 -> System.out.println("Saiu do sistema bancário.");
             default -> System.out.println("Opção inválida, tente novamente.");
         }
     }
 
-    public void executarGerenciarContas(int opcao1, Banco banco, BancoService bancoService){
+    public void executarGerenciarContas(int opcaoInicial, Banco banco, BancoService bancoService, Conta origem){
+        switch (opcaoInicial) {
+            case 1 -> origem.depositar(InputScanner.lerDouble("Valor: "));
+            case 2 -> origem.sacar(InputScanner.lerDouble("Valor: "));
+            case 3 -> origem.getSaldo();
+            case 4 -> realizarTransferencia(banco, bancoService, origem);
+            case 6 -> gerenciarContaCorrente(origem);
+            case 7 -> gerenciarContaPoupanca(origem);
+            case 8 -> System.out.println(banco.removerContaEspecifica(origem.getCliente().getCpf(), origem.getTipoConta()) ? "Conta removida com sucesso" : "Conta não encontrada");
+            case 9 -> System.out.println(banco.removerTodasAsContasCliente(origem.getCliente().getCpf()) ? "Conta removida com sucesso" : "Conta não encontrada");
+            case 0 -> System.out.println("Saindo do gerenciador de conta.");
+            default -> System.out.printf("Opção %s inválida, tente novamente.\n", opcaoInicial);
+        }
+    }
+    
+
+    public void gerenciarContas(Banco banco, BancoService bancoService){
+        int resultado = 0;
         boolean contaDefinida = false;
         String cpf = null;
         String tipo = null;
-        int opcao2 = opcao1;
-        do {
-            if (!contaDefinida){
-                cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF:"));
-                tipo = InputScanner.lerTipoConta("Tipo da conta(CORRENTE OU POUPANÇA): ");
-                contaDefinida = true;
-            }
-            Conta origem = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
-            switch (opcao2) {
-                case 1 -> origem.depositar(InputScanner.lerDouble("Valor: "));
-                case 2 -> origem.sacar(InputScanner.lerDouble("Valor: "));
-                case 3 -> origem.getSaldo();
-                case 4 -> {
-                    cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF:"));
-                    tipo = InputScanner.lerTipoConta("Tipo da conta(CORRENTE OU POUPANÇA): ");
-                    Conta destino = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
-                    bancoService.transferir(origem, destino, InputScanner.lerDouble("Valor: "));
-                }
-                case 5 -> contaDefinida = false;
-                case 6 -> {
-                    int opcao3 = gerenciarContaCorrente();
-                    if (origem instanceof ContaCorrente){
-                        ContaCorrente cc = (ContaCorrente) origem;
-                        do {
-                            switch (opcao3) {
-                                case 1 -> cc.pedirEmprestimo();
-                                case 2 -> cc.pagarEmprestimos();
-                                case 3 -> cc.valorEmprestimo();
-                                case 4 -> System.out.println("Voltando para o gerenciador de contas.");
-                                default -> System.out.println("Opção inválida");
-                            }
-                        } while (opcao3 != 0);
-                    } else {
-                        System.out.println("Tipo de conta inválido: somente 'CORRENTE' é permitido.");
-                    }
-                }
-                case 7 -> {
-                    if (origem instanceof ContaPoupanca){
-                        ContaPoupanca cp = (ContaPoupanca) origem;
-                        cp.simulacaoPoupanca();
-                    }
-                }
-                case 8 -> System.out.println(banco.removerContaEspecifica(cpf, tipo) ? "Conta removida com sucesso" : "Conta não encontrada");
-                case 9 -> System.out.println(banco.removerTodasAsContasCliente(cpf) ? "Conta removida com sucesso" : "Conta não encontrada");
-                case 0 -> System.out.println("Saindo do gerenciador de conta.");
-                default -> System.out.println("Opção inválida, tente novamente.");
-            }
-            opcao2 = gerenciarContas();
-        } while (opcao2 !=0);
-    }
-
-    public int gerenciarContas(){
-        return InputScanner.lerInt("""
+        Conta origem = null;
+        do{
+            int opcaoInicial = InputScanner.lerInt("""
 
                 [ 1 ] Depositar.
                 [ 2 ] Sacar.
@@ -137,18 +98,25 @@ public class MenuBanco {
                 
                 Escolha uma opção: 
                 """);
-    }
 
-    public int gerenciarContaCorrente(){
-        return InputScanner.lerInt("""
-                
-                [ 1 ] Pedir empréstimo.
-                [ 2 ] Pagar emprestimo.
-                [ 3 ] Verificar valor do emprestimo.
-                [ 0 ] Voltar.
-
-                Escolha uma opção:
-                """);
+            if (!contaDefinida && opcaoInicial != 0){
+                cpf = CPFUtils.recebeCPF(InputScanner.lerString("CPF:"));
+                tipo = InputScanner.lerTipoConta("Tipo da conta(CORRENTE OU POUPANÇA): ");
+                if (!banco.listarContasPorCPF(cpf).isEmpty()){
+                    origem = banco.definirConta(cpf, tipo).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+                    contaDefinida = true;
+                }
+            }
+            if (origem == null){
+                System.out.println("Conta indefinida(crie uma conta ou digite corretamente o cpf). Voltando ao menu anterior.");
+                continue;
+            }
+            if (opcaoInicial == 5){ 
+                contaDefinida = false;
+            } else {
+                executarGerenciarContas(opcaoInicial, banco, bancoService, origem);
+            }
+        } while (resultado !=0);
     }
 
     public void filtroContas(Banco banco){
@@ -166,5 +134,61 @@ public class MenuBanco {
             case 3 -> System.out.println(banco.listarContasPorTipo("POUPANÇA"));
             default -> System.out.println("Opção inválida, tente novamente.");
         }
+    }
+
+    private void realizarTransferencia(Banco banco, BancoService bancoService, Conta origem){
+        String cpfDestino = CPFUtils.recebeCPF(InputScanner.lerString("CPF do destinatário: "));
+        String tipoDestino = InputScanner.lerTipoConta("Tipo da conta destino (CORRENTE ou POUPANÇA): ");
+        if (!banco.listarContasPorCPF(cpfDestino).isEmpty()){
+            System.out.println("Conta não encontrada, falha na transferência");
+        } else {
+            double valor = InputScanner.lerDouble("Valor para transferência: ");
+        
+            Conta destino = banco.definirConta(cpfDestino, tipoDestino)
+                .orElseThrow(() -> new RuntimeException("Conta destino não encontrada!"));
+            
+            bancoService.transferir(origem, destino, valor);
+            System.out.println("Transferência realizada com sucesso.");
+        }
+    }
+
+    public void gerenciarContaCorrente(Conta conta) {
+        if (!(conta instanceof ContaCorrente)) {
+            System.out.println("Tipo de conta inválido: somente 'CORRENTE' é permitido.");
+            return;
+        }
+    
+        ContaCorrente cc = (ContaCorrente) conta;
+        int opcao;
+        
+        do {
+            opcao = InputScanner.lerInt("""
+                
+            [ 1 ] Pedir empréstimo.
+            [ 2 ] Pagar emprestimo.
+            [ 3 ] Verificar valor do emprestimo.
+            [ 0 ] Voltar.
+
+            Escolha uma opção:
+            """);
+            
+            switch (opcao) {
+                case 1 -> cc.pedirEmprestimo();
+                case 2 -> cc.pagarEmprestimos();
+                case 3 -> cc.valorEmprestimo();
+                case 4 -> System.out.println("Voltando para o gerenciador de contas.");
+                default -> System.out.println("Opção inválida");
+            }
+        } while (opcao != 0 && opcao != 4);
+    }
+
+    public void gerenciarContaPoupanca(Conta conta) {
+        if (!(conta instanceof ContaPoupanca)) {
+            System.out.println("Tipo de conta inválido: somente 'POUPANÇA' é permitido.");
+            return;
+        }
+    
+        ContaPoupanca cp = (ContaPoupanca) conta;
+        cp.simulacaoPoupanca();
     }
 }

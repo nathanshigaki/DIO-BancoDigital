@@ -1,7 +1,7 @@
 package org.bancoDigital.model;
 
 public abstract class Conta {
-    private static int ID = -1;
+    private static int ID = 1;
     protected int idConta;
     protected Cliente cliente;
     protected String tipoConta;

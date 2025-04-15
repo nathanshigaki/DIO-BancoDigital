@@ -26,9 +26,11 @@ public class InputScanner {
         while (true) {
             try {
                 System.out.print(mensagem);
-                return Integer.parseInt(scanner.nextLine());
+                int num = scanner.nextInt();
+                scanner.nextLine();
+                return num;
             } catch (NumberFormatException e) {
-                System.out.println("Valor inválido. Digite um número de 0 a 9.");
+                System.out.println("Valor inválido.");
             }
         }
     }
@@ -37,7 +39,9 @@ public class InputScanner {
         while (true) {
             try {
                 System.out.print(mensagem);
-                return Double.parseDouble(scanner.nextLine());
+                double num = scanner.nextDouble();
+                scanner.nextLine();
+                return num;
             } catch (NumberFormatException e) {
                 System.out.println("Valor inválido. Digite um número decimal.");
             }
