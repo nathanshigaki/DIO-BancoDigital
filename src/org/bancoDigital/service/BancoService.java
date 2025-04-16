@@ -26,10 +26,15 @@ public class BancoService {
                 System.out.println("Cliente não encontrado. Verifique o CPF ou cadastre o cliente primeiro.");
                 return null;
             }
-            Cliente cliente = clienteOptional.get();
-            Conta novaConta = contaFactory.criarConta(cliente, tipo);
-            banco.adicionarConta(novaConta);
-            return novaConta;
+            Optional<Conta> contaDuplicada = banco.definirConta(cpf, tipo);
+            if (contaDuplicada.isEmpty()){
+                Cliente cliente = clienteOptional.get();
+                Conta novaConta = contaFactory.criarConta(cliente, tipo);
+                banco.adicionarConta(novaConta);
+                return novaConta;
+            }
+            System.out.println("Cliente já tem esse tipo de conta.");
+            return null;
         } catch (IllegalArgumentException e){
             System.out.println("Erro ao criar conta: " + e.getMessage());
             return null;

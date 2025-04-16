@@ -64,12 +64,12 @@ public class MenuBanco {
         switch (opcaoInicial) {
             case 1 -> origem.depositar(InputScanner.lerDouble("Valor: "));
             case 2 -> origem.sacar(InputScanner.lerDouble("Valor: "));
-            case 3 -> origem.getSaldo();
+            case 3 -> System.out.println("Saldo R$"+origem.getSaldo());
             case 4 -> realizarTransferencia(banco, bancoService, origem);
             case 6 -> gerenciarContaCorrente(origem);
             case 7 -> gerenciarContaPoupanca(origem);
             case 8 -> System.out.println(banco.removerContaEspecifica(origem.getCliente().getCpf(), origem.getTipoConta()) ? "Conta removida com sucesso" : "Conta não encontrada");
-            case 9 -> System.out.println(banco.removerTodasAsContasCliente(origem.getCliente().getCpf()) ? "Conta removida com sucesso" : "Conta não encontrada");
+            case 9 -> System.out.println(banco.removerTodasAsContasCliente(origem.getCliente().getCpf()) ? "Contas removidas com sucesso" : "Conta não encontrada");
             case 0 -> System.out.println("Saindo do gerenciador de conta.");
             default -> System.out.printf("Opção %s inválida, tente novamente.\n", opcaoInicial);
         }
@@ -77,13 +77,13 @@ public class MenuBanco {
     
 
     public void gerenciarContas(Banco banco, BancoService bancoService){
-        int resultado = 0;
+        int opcaoInicial = 0;
         boolean contaDefinida = false;
         String cpf = null;
         String tipo = null;
         Conta origem = null;
         do{
-            int opcaoInicial = InputScanner.lerInt("""
+            opcaoInicial = InputScanner.lerInt("""
 
                 [ 1 ] Depositar.
                 [ 2 ] Sacar.
@@ -107,7 +107,7 @@ public class MenuBanco {
                     contaDefinida = true;
                 }
             }
-            if (origem == null){
+            if (origem == null && opcaoInicial !=0){
                 System.out.println("Conta indefinida(crie uma conta ou digite corretamente o cpf). Voltando ao menu anterior.");
                 continue;
             }
@@ -116,7 +116,7 @@ public class MenuBanco {
             } else {
                 executarGerenciarContas(opcaoInicial, banco, bancoService, origem);
             }
-        } while (resultado !=0);
+        } while (opcaoInicial !=0);
     }
 
     public void filtroContas(Banco banco){
@@ -139,7 +139,7 @@ public class MenuBanco {
     private void realizarTransferencia(Banco banco, BancoService bancoService, Conta origem){
         String cpfDestino = CPFUtils.recebeCPF(InputScanner.lerString("CPF do destinatário: "));
         String tipoDestino = InputScanner.lerTipoConta("Tipo da conta destino (CORRENTE ou POUPANÇA): ");
-        if (!banco.listarContasPorCPF(cpfDestino).isEmpty()){
+        if (banco.listarContasPorCPF(cpfDestino).isEmpty()){
             System.out.println("Conta não encontrada, falha na transferência");
         } else {
             double valor = InputScanner.lerDouble("Valor para transferência: ");

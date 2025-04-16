@@ -1,5 +1,6 @@
 package org.bancoDigital.util;
 
+import java.text.Normalizer;
 import java.util.Scanner;
 
 public class InputScanner {
@@ -13,8 +14,9 @@ public class InputScanner {
     public static String lerTipoConta(String mensagem){
         while (true) {
             System.out.println(mensagem);
-            String tipo = scanner.next();
-            switch (tipo.toUpperCase()) {
+            String tipo = scanner.nextLine().trim().toUpperCase();
+            tipo = Normalizer.normalize(tipo, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "Ç");
+            switch (tipo) {
                 case "CORRENTE" : return tipo;
                 case "POUPANÇA" : return tipo;
                 default : System.out.println("Tipo de conta inválida.");

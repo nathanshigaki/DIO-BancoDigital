@@ -3,7 +3,7 @@ package org.bancoDigital.model;
 import org.bancoDigital.util.InputScanner;
 
 public class ContaPoupanca extends Conta{
-    private static final double TAXA_RENDIMENTO = 0.04;
+    private static final double TAXA_RENDIMENTO = 0.0015;
 
     public ContaPoupanca(Cliente cliente, String tipoConta) {
         super(cliente, tipoConta);
